@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据统计</title>
+
+    <link rel="stylesheet" href="/static/css/layui.css">
+    <script src="/static/js/layui.js/"></script>
+    <script src="/static/js/echarts.js/"></script>
+</head>
+<body>
+<ul class="layui-nav" lay-filter="">
+
+    <li class="layui-nav-item"><a href="/yuanlin/">苗木网供应信息查询</a></li>
+    <li class="layui-nav-item"><a href="/huamu/">花木网供应信息查询</a></li>
+<!--<li class="layui-nav-item"><a href="/yuanlin/show/price/">价格统计</a></li>-->
+    <li class="layui-nav-item"><a href="/yuanlin/show/miaomu_types/">苗木供应地区和热门苗木种类统计</a></li>
+    <li class="layui-nav-item layui-this"><a href="/index/">数据统计</a></li>
+</ul>
+
+<div class="up_section">
+
+    <div id="up_left" style="width: 49%;height:400px; float: left;"></div>
+
+    <div id="up_right" style="width: 49%; height:400px;float: right;">
+    </div>
+
+</div>
+
+<div class="down_section">
+    <div id="down_left" style="width: 49%;height:400px; float: left;"></div>
+
+    <div id="down_right" style="width: 49%; height:400px;float: right;">
+    </div>
+</div>
+
+<div class="middle">
+     <div id="middle_left" style="width: 49%;height:400px; float: left;"></div>
+
+    <div id="middle_right" style="width: 49%; height:400px;float: right;">
+    </div>
+</div>
+
+<script>
+
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+      var element = layui.element;
+    });
+</script>
+
+<script>
+    var chartDom6 = document.getElementById('middle_right');
+    var myChart6 = echarts.init(chartDom6);
+    var option6;
+
+    option6 = {
+        tooltip: {
+            trigger: 'item'
+        },
+        title:{
+             text: '花木网价格统计',
+             left: 'center'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: '花木网价格',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    {% for d in huamu_price %}
+                    {value: {{ d.1 }}, name: '{{ d.0 | safe }}'},
+                    {% endfor %}
+                ]
+            }
+        ]
+    };
+
+    option6 && myChart6.setOption(option6);
+    var chartDom5 = document.getElementById('middle_left');
+    var myChart5 = echarts.init(chartDom5);
+    var option5;
+
+    option5 = {
+        tooltip: {
+            trigger: 'item'
+        },
+        title:{
+             text: '苗木网价格统计',
+             left: 'center'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: '苗木网价格',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    {% for d in yuanlin_price %}
+                    {value: {{ d.1 }}, name: '{{ d.0 | safe }}'},
+                    {% endfor %}
+                ]
+            }
+        ]
+    };
+
+    option5 && myChart5.setOption(option5);
+    var chartDom1 = document.getElementById('up_left');
+    var myChart1 = echarts.init(chartDom1);
+    var option1;
+
+    option1 = {
+        title:{
+             text: '米径与平均价格(元)的关系',
+             left: 'center'
+        },
+        legend: {
+             data:['苗木网','花木网'],
+             orient: 'vertical',  //垂直显示
+             y: 'up',    //延Y轴居中
+             x: 'right' //居右显示
+        },
+        tooltip: {
+        trigger: 'item',
+<!--          formatter: '{a} <br/>{b} : {c}(元)'-->
+        },
+
+        xAxis: {
+            type: 'category',
+        },
+        yAxis: {
+        },
+        dataset:{
+            source:[
+                ['网站', '苗木网', '花木网'],
+                {% for d in rice2price %}
+                 {{ d | safe }},
+                {% endfor %}
+
+            ]
+        },
+        series: [
+        {type: 'bar',
+
+            itemStyle:{
+                                normal:{
+                                        color:'#00FF7F'
+                                    }
+                                },
+
+          },
+          {type: 'bar',
+          itemStyle:{
+                                normal:{
+                                        color:'#FFD700'
+                                    }
+                                },
+          },
+    ]
+    };
+
+    option1 && myChart1.setOption(option1);
+    var chartDom2 = document.getElementById('up_right');
+    var myChart2 = echarts.init(chartDom2);
+    var option2;
+
+    option2 = {
+        title:{
+             text: '高度与平均价格(元)的关系',
+             left: 'center'
+        },
+        legend: {
+             data:['苗木网','花木网'],
+             orient: 'vertical',  //垂直显示
+             y: 'up',    //延Y轴居中
+             x: 'right' //居右显示
+        },
+        tooltip: {
+        trigger: 'item',
+<!--        formatter: '{a} <br/>{b} : {c}(元)'-->
+        },
+
+        xAxis: {
+            type: 'category',
+        },
+        yAxis: {
+            type: 'value'
+        },
+        dataset:{
+            source:[
+                ['网站', '苗木网', '花木网'],
+                {% for d in height2price %}
+                 {{ d | safe }},
+                {% endfor %}
+
+            ]
+        },
+        series: [
+          {type: 'bar',
+
+            itemStyle:{
+                                normal:{
+                                        color:'#00CED1'
+                                    }
+                                },
+
+          },
+          {type: 'bar',
+          itemStyle:{
+                                normal:{
+                                        color:'#FFC0CB'
+                                    }
+                                },
+          },
+        ]
+    };
+
+    option2 && myChart2.setOption(option2);
+    var chartDom3 = document.getElementById('down_left');
+    var myChart3 = echarts.init(chartDom3);
+    var option3;
+
+    option3 = {
+        title:{
+             text: '冠幅与平均价格(元)的关系',
+             left: 'center'
+        },
+        legend: {
+             data:['苗木网','花木网'],
+             orient: 'vertical',  //垂直显示
+             y: 'up',    //延Y轴居中
+             x: 'right' //居右显示
+        },
+        tooltip: {
+        trigger: 'item',
+        },
+
+        xAxis: {
+            type: 'category',
+        },
+        yAxis: {
+            type: 'value'
+        },
+        dataset:{
+            source:[
+                ['网站', '苗木网', '花木网'],
+                {% for d in width2price %}
+                 {{ d | safe }},
+                {% endfor %}
+
+            ]
+        },
+        series: [
+        {type: 'bar',
+
+            itemStyle:{
+                                normal:{
+                                        color:'#F0E68C'
+                                    }
+                                },
+
+          },
+          {type: 'bar',
+          itemStyle:{
+                                normal:{
+                                        color:'#AFEEEE'
+                                    }
+                                },
+          },
+        ]
+    };
+
+    option3 && myChart3.setOption(option3);
+    var chartDom4 = document.getElementById('down_right');
+    var myChart4 = echarts.init(chartDom4);
+    var option4;
+
+    option4 = {
+        title:{
+             text: '地径与平均价格(元)的关系',
+             left: 'center'
+        },
+        legend: {
+             data:['苗木网','花木网'],
+             orient: 'vertical',  //垂直显示
+             y: 'up',    //延Y轴居中
+             x: 'right' //居右显示
+        },
+        tooltip: {
+        trigger: 'item',
+        },
+
+        xAxis: {
+            type: 'category',
+        },
+        yAxis: {
+            type: 'value'
+        },
+         dataset:{
+            source:[
+                ['网站', '苗木网', '花木网'],
+                {% for d in ground2price %}
+                 {{ d | safe }},
+                {% endfor %}
+
+            ]
+        },
+        series: [
+        {type: 'bar',
+
+            itemStyle:{
+                                normal:{
+                                        color:'#00FFFF'
+                                    }
+                                },
+
+          },
+          {type: 'bar',
+          itemStyle:{
+                                normal:{
+                                        color:'#FFE4E1'
+                                    }
+                                },
+          },
+        ]
+    };
+
+    option4 && myChart4.setOption(option4);
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

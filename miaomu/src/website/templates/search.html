@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索结果</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/layui/css/modules/layer/default/layer.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .layui-btn{
+            position: absolute;
+            left: 47px;
+        }
+        h3{
+            height: 38px;
+            margin-top: 13px;
+            font-size: 20px;
+            line-height: 38px;
+        }
+    </style>
+</head>
+<body>
+<a href="../{{ name }}" class="layui-btn">返回</a>
+
+<h3 style="text-align: center;">共查到{{ count }}条结果!</h3>
+<hr>
+<div style="text-align: center" class="info">
+    <div class="layui-inline" style="height: 50%">
+        <table class="layui-hide" id="info"></table>
+    </div>
+</div>
+
+<script src="/static/layui/layui.js"></script>
+<script src="/static/layui/lay/modules/layer.js"></script>
+    <!--引入jquery.js  -->
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script>
+
+  layui.use('table', function(){
+  var table = layui.table;
+
+   //第一个实例
+  table.render({
+    elem: '#info'
+    ,height: 548
+    ,url: '/data/search/' //数据接口
+    ,page: {
+              limit: 12,
+              limits: [12,18,24,30],
+              groups: 10,
+     }//开启分页
+    ,cols: [[ //表头
+      {field: 'product_name', title: '产品名称', width:400,align:'center'}
+      ,{field: 'rice_dia', title: '米径', width:120, sort: true,align:'center'}
+      ,{field: 'height', title: '高度', width:120, sort: true,align:'center'}
+      ,{field: 'width', title: '冠幅', width: 120, sort: true,align:'center'}
+      ,{field: 'ground_dia', title: '地径', width: 120, sort: true,align:'center'}
+      ,{field: 'price', title: '价格', width: 120, sort: true,align:'center'}
+      ,{field: 'unit', title: '单位', width: 120,align:'center'}
+      ,{field: 'provider', title: '提供商', width: 300,align:'center'}
+    ]]
+    ,done: function (res) {
+       //如果是异步请求数据方式，res即为你接口返回的信息。
+       //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+       // console.log('传入表格的数据'+ res)
+       // console.log('传入table中的数据')
+       console.log(res)
+       console.log(res.data.length)
+    }
+  });
+});
+
+
+</script>
+</body>
+</html>

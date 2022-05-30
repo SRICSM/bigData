@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>苗木供应地区和热门苗木种类统计</title>
+    <link rel="stylesheet" href="/static/css/layui.css">
+
+    <script src="/static/js/layui.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+
+     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .layui-nav .layui-nav-item {
+             left: 360px;
+        }
+    </style>
+</head>
+<body>
+<ul class="layui-nav" lay-filter="">
+    <li class="layui-nav-item"><a href="/yuanlin/">苗木网供应信息查询</a></li>
+    <li class="layui-nav-item"><a href="/huamu/">花木网供应信息查询</a></li>
+    <li class="layui-nav-item layui-this"><a href="/yuanlin/show/miaomu_types/">苗木供应地区和热门苗木种类统计</a></li>
+    <li class="layui-nav-item"><a href="/index/">数据统计</a></li>
+</ul>
+<div class="hr" style="height:20px;"></div>
+<div class="up_section">
+
+    <div id="up_left" style="width: 49%;height: 700px; float: left;"></div>
+
+    <div id="up_right" style="width: 49%; height: 700px; float: right;">
+    </div>
+
+</div>
+
+
+<script>
+var chartDom = document.getElementById('up_right');
+var myChart = echarts.init(chartDom);
+var option;
+
+option = {
+    title: {
+        text: '前100热门苗木种类统计',
+        left: '380px'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+    },
+    legend: {
+        type: 'scroll',
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        bottom: 20,
+        data: [
+            {% for d in test %}
+            {name: '{{ d.0 }}', value: {{ d.1 }}},
+            {% endfor %}
+
+        ],
+
+<!--        selected: data.selected-->
+    },
+    series: [
+        {
+            name: '苗木种类名称',
+            type: 'pie',
+            radius: '55%',
+            center: ['40%', '50%'],
+            data: [
+
+            {% for d in test %}
+            {name: '{{ d.0 }}', value: {{ d.1 }}},
+            {% endfor %}
+            ],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+option && myChart.setOption(option);
+
+
+var chartDom1 = document.getElementById('up_left');
+var myChart1 = echarts.init(chartDom1);
+var option1;
+
+option1 = {
+    title: {
+        text: '地区供应苗木统计',
+        x: '500px',
+
+    },
+    tooltip: {
+        trigger: 'item'
+    },
+    series: [
+        {
+            name: '地区',
+            type: 'pie',
+            radius: '50%',
+            data: [
+                {% for i in addr_nums %}
+                {value: {{ i.1 }}, name: '{{ i.0 }}'},
+                {% endfor %}
+            ],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+option1 && myChart1.setOption(option1);
+
+
+</script>
+</body>
+</html>

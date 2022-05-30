@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>苗木网供应信息</title>
+    <link rel="stylesheet" href="/static/css/layui.css">
+
+     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .layui-nav .layui-nav-item {
+             left: 360px;
+        }
+    </style>
+</head>
+<body>
+<ul class="layui-nav" lay-filter="">
+    <li class="layui-nav-item layui-this"><a href="/yuanlin/">苗木网供应信息查询</a></li>
+    <li class="layui-nav-item"><a href="/huamu/">花木网供应信息查询</a></li>
+<!--    <li class="layui-nav-item"><a href="/yuanlin/show/price/">价格统计</a></li>-->
+    <li class="layui-nav-item"><a href="/yuanlin/show/miaomu_types/">苗木供应地区和热门苗木种类统计</a></li>
+    <li class="layui-nav-item"><a href="/index/">数据统计</a></li>
+</ul>
+
+
+<div class="search" style="text-align: center; height: 30%;margin-top: 15px;" >
+    <div class="layui-inline" style="width: 400px; height: 30%">
+        <input type="text" name="kw" id="kw" required lay-verify="required" placeholder="搜索" autocomplete="off"
+               class="layui-input" style="width: 400px; height: 50px;">
+    </div>
+    <button type="button" id="search" class="layui-btn" style="height: 50px;">搜索</button>
+</div>
+
+<div style="text-align: center" class="info">
+    <div class="layui-inline" style="height: 50%">
+        <table class="layui-hide" id="info"></table>
+    </div>
+
+</div>
+
+
+<script src="/static/js/layui.js"></script>
+    <!--引入jquery.js  -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+<script>
+
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function(){
+      var element = layui.element;
+    });
+
+
+
+</script>
+
+<script>
+
+<!--判断是否为空-->
+function isnull(val) {
+
+        var str = val.replace(/(^\s*)|(\s*$)/g, '');//去除空格;
+
+        if (str == '' || str == undefined || str == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+<!--点击搜索按钮-->
+    $("#search").click(function (){
+        var kw = $("#kw").val()
+<!--        console.log(text)-->
+        if(isnull(kw)){
+
+        }
+        else{
+            $(location).attr('href', '../../../search/?name=yuanlin&kw=' + kw);
+
+        }
+   });
+
+layui.use('table', function(){
+  var table = layui.table;
+   //第一个实例
+  table.render({
+    elem: '#info'
+    ,height: 550
+    ,url: '/yuanlin/data/get/' //数据接口
+    ,page: {
+              limit: 12,
+              limits: [12,18,24,30],
+              groups: 10,
+     }//开启分页
+    ,cols: [[ //表头
+      {field: 'product_name', title: '产品名称', width:200, align: 'center'}
+      ,{field: 'rice_dia', title: '米径', width:100, sort: true, align: 'center'}
+      ,{field: 'height', title: '高度', width:100, sort: true, align: 'center'}
+      ,{field: 'width', title: '冠幅', width: 100, sort: true, align: 'center'}
+      ,{field: 'ground_dia', title: '地径', width: 100, sort: true, align: 'center'}
+      ,{field: 'price', title: '价格', width: 100, sort: true, align: 'center',style:'color:#FF5722'}
+      ,{field: 'unit', title: '单位', width: 100, align: 'center'}
+      ,{field: 'provider', title: '提供商', width: 300, align: 'center'}
+    ]]
+  });
+});
+</script>
+</body>
+</html>
